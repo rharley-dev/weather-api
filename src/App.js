@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Weather from './component/Weather.jsx';
 import Form from './component/Form.jsx';
+import Navbar from './component/Navbar.jsx';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'weather-icons/css/weather-icons.css';
@@ -12,13 +13,12 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      city: undefined,
-      country: undefined,
       icon: undefined,
       main: undefined,
       temp: undefined,
       tempMax: undefined,
       tempMin: undefined,
+      wind: undefined,
       desc: '',
       error: false,
     };
@@ -86,6 +86,7 @@ class App extends React.Component {
         temp: this.calcFahrenheit(response.main.temp),
         tempMax: this.calcFahrenheit(response.main.temp_max),
         tempMin: this.calcFahrenheit(response.main.temp_min),
+        wind: response.wind.speed,
         desc: response.weather[0].description,
         error: false
       });
@@ -98,12 +99,14 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
+        <Navbar />
         <Form loadWeather={this.getWeather} error={this.state.error}/>
         <Weather
           location={this.state.location}
           temp={this.state.temp}
           tempMax={this.state.tempMax}
           tempMin={this.state.tempMin}
+          wind={this.state.wind}
           desc={this.state.desc}
           icon={this.state.icon}
         />

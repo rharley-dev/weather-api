@@ -7,13 +7,14 @@ function Weather(props) {
     <div className="container text-light">
       <div className="cards pt-4">
         <h1>{props.location}</h1>
+        <h4 className="">{props.desc}</h4>
         <h5 className="py-4">
           <i className={`wi ${props.icon} display-1`}></i>
         </h5>
         {props.temp ? <h1 className="py-2">{props.temp}&deg;</h1> : null}
         {minmaxTemp(props.tempMin, props.tempMax)}
-
-        <h4 className="py-4">{props.desc}</h4>
+        {props.wind ? <h4 className='py-2'>wind: {props.wind}</h4> : null}
+        
       </div>
     </div>
   );

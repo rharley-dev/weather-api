@@ -2,6 +2,7 @@ import React from 'react';
 import '../styles/form.css';
 
 function Form(props) {
+  // const data = 
   return (
     <div className="container">
       <div>{props.error ? error() : null}</div>
@@ -12,7 +13,7 @@ function Form(props) {
               list="cityNames"
               type="text"
               className="form-control"
-              placeholder="City"
+              placeholder="City..."
               name="city"
               autoComplete="off"
             />
@@ -25,13 +26,13 @@ function Form(props) {
             <input
               type="text"
               className="form-control"
-              placeholder="Country"
+              placeholder="Country(US)..."
               name="country"
               autoComplete="off"
             />
           </div>
-          <div className="col-md-3 mt-md-0 py-2">
-            <button className="btn btn-warning">Get Weather</button>
+          <div className="col-md-3 mt-2 mt-md-0">
+            <button className="btn btn-outline-light">Get Weather</button>
           </div>
         </div>
       </form>
