@@ -1,8 +1,7 @@
 import React from 'react';
-import "./App.css";
+import './App.css';
 import Weather from './component/Weather.jsx';
-import Form from './component/Form.jsx'
-// import axios from 'axios';
+import Form from './component/Form.jsx';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'weather-icons/css/weather-icons.css';
@@ -23,7 +22,6 @@ class App extends React.Component {
       desc: '',
       error: false,
     };
-    this.getWeather();
     //using weather icons with weather-icons.css
     this.weatherIcon = {
       Thunderstorm: 'wi-thunderstorm',
@@ -69,30 +67,40 @@ class App extends React.Component {
     return cell;
   }
 
-  getWeather = async () => {
-    const apiCall = await fetch(
-      `http://api.openweathermap.org/data/2.5/weather?q=Minneapolis,us&appid=${apiKey}`
-    );
-    const response = await apiCall.json();
-    console.log(response);
-    this.setState({
-      city: response.name,
-      country: response.sys.country,
-      temp: this.calcFahrenheit(response.main.temp),
-      tempMax: this.calcFahrenheit(response.main.temp_max),
-      tempMin: this.calcFahrenheit(response.main.temp_min),
-      desc: response.weather[0].description,
-    });
-    this.getWeatherIcon(this.weatherIcon, response.weather[0].id);
+  getWeather = async event => {
+    // to overide page from loading when called
+    event.preventDefault();
+
+    // calling name var in input doc to retrieve value
+    const city = event.target.elements.city.value;
+    const country = event.target.elements.country.value;
+
+    if (city && country) {
+      const apiCall = await fetch(
+        `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiKey}`
+      );
+      const response = await apiCall.json();
+      console.log(response);
+      this.setState({
+        location: `${response.name}, ${response.sys.country}`,
+        temp: this.calcFahrenheit(response.main.temp),
+        tempMax: this.calcFahrenheit(response.main.temp_max),
+        tempMin: this.calcFahrenheit(response.main.temp_min),
+        desc: response.weather[0].description,
+        error: false
+      });
+      this.getWeatherIcon(this.weatherIcon, response.weather[0].id);
+    } else {
+      this.setState({ error: true });
+    }
   };
 
   render() {
     return (
       <div className="App">
-        <Form />
+        <Form loadWeather={this.getWeather} error={this.state.error}/>
         <Weather
-          city={this.state.city}
-          country={this.state.country}
+          location={this.state.location}
           temp={this.state.temp}
           tempMax={this.state.tempMax}
           tempMin={this.state.tempMin}

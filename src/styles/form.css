@@ -11,3 +11,13 @@ form input[name="country"] {
   border-radius: 0;
 }
 
+form input:focus {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: white !important;
+}
+
+
+.container form input::-webkit-input-placeholder {
+  color: white !important;
+}
