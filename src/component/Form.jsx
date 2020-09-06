@@ -2,12 +2,11 @@ import React from 'react';
 import '../styles/form.css';
 
 function Form(props) {
-  // const data = 
   return (
     <div className="container">
       <div>{props.error ? error() : null}</div>
       <form onSubmit={props.loadWeather}>
-        <div className="row">
+        <div className="row ml-1">
           <div className="col-md-3 offset-md-2">
             <input
               list="cityNames"
