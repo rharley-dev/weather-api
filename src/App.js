@@ -3,6 +3,8 @@ import './App.css';
 import Weather from './component/Weather.jsx';
 import Form from './component/Form.jsx';
 import Navbar from './component/Navbar.jsx';
+import Forecast from './component/Forecast';
+import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'weather-icons/css/weather-icons.css';
@@ -14,13 +16,14 @@ class App extends React.Component {
     super();
     this.state = {
       icon: undefined,
-      main: undefined,
       temp: undefined,
       tempMax: undefined,
       tempMin: undefined,
       wind: undefined,
       desc: '',
       error: false,
+      data: [],
+      forecastError: false,
     };
     //using weather icons with weather-icons.css
     this.weatherIcon = {
@@ -32,6 +35,7 @@ class App extends React.Component {
       Clear: 'wi-day-sunny',
       Clouds: 'wi-day-fog',
     };
+    this.getWeather.bind(this);
   }
 
   getWeatherIcon(icons, rangeId) {
@@ -76,23 +80,43 @@ class App extends React.Component {
     const country = event.target.elements.country.value;
 
     if (city && country) {
-      const apiCall = await fetch(
-        `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiKey}`
-      );
-      const response = await apiCall.json();
-      console.log(response);
-      this.setState({
-        location: `${response.name}, ${response.sys.country}`,
-        temp: this.calcFahrenheit(response.main.temp),
-        tempMax: this.calcFahrenheit(response.main.temp_max),
-        tempMin: this.calcFahrenheit(response.main.temp_min),
-        wind: response.wind.speed,
-        desc: response.weather[0].description,
-        error: false
-      });
-      this.getWeatherIcon(this.weatherIcon, response.weather[0].id);
+      await axios
+        .get(
+          `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiKey}`
+        )
+        .then(response => {
+          const data = response.data;
+          this.setState({
+            location: `${data.name}, ${data.sys.country}`,
+            temp: this.calcFahrenheit(data.main.temp),
+            tempMax: this.calcFahrenheit(data.main.temp_max),
+            tempMin: this.calcFahrenheit(data.main.temp_min),
+            wind: data.wind.speed,
+            desc: data.weather[0].description,
+            error: false,
+          });
+          this.getWeatherIcon(this.weatherIcon, data.weather[0].id);
+          return data;
+        });
+
+      await axios
+        .get(
+          `http://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&appid=${apiKey}`
+        )
+        .then(response => {
+          const data = response.data;
+          this.setState({
+            data: data.list,
+            forecastError: false,
+          });
+          return data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        console.log(this.state.data);
     } else {
-      this.setState({ error: true });
+      this.setState({ error: true, forecastError: true });
     }
   };
 
@@ -100,7 +124,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Navbar />
-        <Form loadWeather={this.getWeather} error={this.state.error}/>
+        <Form loadWeather={this.getWeather} error={this.state.error} />
         <Weather
           location={this.state.location}
           temp={this.state.temp}
@@ -110,6 +134,7 @@ class App extends React.Component {
           desc={this.state.desc}
           icon={this.state.icon}
         />
+        <Forecast data={this.state.data} />
       </div>
     );
   }

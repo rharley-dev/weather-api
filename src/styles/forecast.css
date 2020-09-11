@@ -1,0 +1,13 @@
+.dtTableContainerWrapper {
+  max-width: 600px;
+  margin: 0 auto;
+}
+#tableContainer th,
+td {
+  white-space: nowrap;
+}
+
+.table-borderless td,
+.table-borderless th {
+    border: 0;
+}

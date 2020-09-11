@@ -14,7 +14,6 @@ function Weather(props) {
         {props.temp ? <h1 className="py-2">{props.temp}&deg;</h1> : null}
         {minmaxTemp(props.tempMin, props.tempMax)}
         {props.wind ? <h4 className='py-2'>wind: {props.wind}</h4> : null}
-        
       </div>
     </div>
   );
