@@ -114,7 +114,6 @@ class App extends React.Component {
         .catch(function (error) {
           console.log(error);
         });
-        console.log(this.state.data);
     } else {
       this.setState({ error: true, forecastError: true });
     }
